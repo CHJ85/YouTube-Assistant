@@ -6,9 +6,9 @@ NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85
 
 # Keyboard shortcuts
  - Ctrl+Up - Enable surround sound (unable to turn off without having to refresh the webpage)
- - Ctrl+Left - Hue color control
- - Ctrl+Right - Jump forward 30 seconds. Useful for skipping the TV show intro or if you just want to fast forward a bit.
+ - Ctrl+Right - Jump forward 30 seconds. Useful for skipping the TV show intro or if you just want to fast forward a bit (works on ads too).
  - Ctrl+Down - Video filters: black & white, sepia and invert colors
+ - Ctrl+, - Hue color control
 # Additional Features
  - Change aspect ratio directly from the video player
  - Control brightness from the video player's setting menu
