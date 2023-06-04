@@ -2,8 +2,8 @@
 // @name         YouTube Assistant - Keyboard shortcuts and features
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.0
-// @description  Keyboard shortcuts and additional features to improve your viewing experience on YouTube.
+// @version      1.2
+// @description  Add additonal features and ad blocking to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
 // @grant        none
@@ -11,6 +11,39 @@
 
 (function() {
   'use strict';
+
+  /* ----------------------------- */
+  /* Ad Blocking with Hosts File */
+  /* ----------------------------- */
+
+  // Fetch and apply the custom hosts file from GitHub
+  fetch('https://raw.githubusercontent.com/cenk/bad-hosts/main/hosts')
+    .then(response => response.text())
+    .then(hostsFile => {
+      const lines = hostsFile.split('\n');
+      const adsRegex = /^0\.0\.0\.0\s+(.+)/;
+      const adDomains = lines
+        .filter(line => adsRegex.test(line))
+        .map(line => line.match(adsRegex)[1].trim());
+
+      const blockAds = () => {
+        const adLinks = document.querySelectorAll('a[href*="doubleclick.net"]');
+        adLinks.forEach(adLink => {
+          const adURL = new URL(adLink.href);
+          if (adDomains.includes(adURL.hostname)) {
+            adLink.remove();
+          }
+        });
+      };
+
+      // Block ads when the page loads and whenever the DOM changes
+      blockAds();
+      const observer = new MutationObserver(blockAds);
+      observer.observe(document.body, { childList: true, subtree: true });
+    })
+    .catch(error => {
+      console.error('Failed to fetch the hosts file:', error);
+    });
 
   /* ----------------------------- */
   /* Aspect Ratio Control */
@@ -82,14 +115,19 @@
   let resources, brightness, video, settingsMenu, speedOption, brightnessOption, text;
 
   function init() {
-    const lang = document.documentElement.lang;
-    resources = LANGUAGE_RESOURCES[lang] || LANGUAGE_RESOURCES[LANGUAGE_DEFAULT];
-    video = document.querySelector("video");
-    settingsMenu = document.querySelector("div.ytp-settings-menu");
-    brightness = parseInt(localStorage.getItem("lwchris.youtube_brightness_option.brightness") || "100", 10);
-    setBrightness(brightness);
-    addObserver();
-  }
+  const lang = document.documentElement.lang;
+  resources = LANGUAGE_RESOURCES[lang] || LANGUAGE_RESOURCES[LANGUAGE_DEFAULT];
+  video = document.querySelector("video");
+  settingsMenu = document.querySelector("div.ytp-settings-menu");
+  brightness = parseInt(localStorage.getItem("lwchris.youtube_brightness_option.brightness") || "100", 10);
+  setBrightness(brightness);
+  addObserver();
+
+  // Attach the event listeners to the video player element
+  const videoPlayer = document.getElementById("movie_player");
+  videoPlayer.addEventListener("keydown", handleKeydown);
+  videoPlayer.addEventListener("keyup", handleKeyup);
+}
 
   function addObserver() {
     const observer = new MutationObserver(menuPopulated);
