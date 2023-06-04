@@ -2,7 +2,7 @@
 // @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.3
+// @version      1.4
 // @description  Add additonal features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
@@ -35,6 +35,10 @@
             adLink.remove();
           }
         });
+        const overlayAds = document.querySelectorAll('.ytp-ad-overlay-slot');
+        overlayAds.forEach(overlayAd => overlayAd.remove());
+        const videoAds = document.querySelectorAll('.ytp-ad-image-overlay');
+        videoAds.forEach(videoAd => videoAd.remove());
       };
 
       // Block trackers when the page loads and whenever the DOM changes
@@ -116,19 +120,19 @@
   let resources, brightness, video, settingsMenu, speedOption, brightnessOption, text;
 
   function init() {
-  const lang = document.documentElement.lang;
-  resources = LANGUAGE_RESOURCES[lang] || LANGUAGE_RESOURCES[LANGUAGE_DEFAULT];
-  video = document.querySelector("video");
-  settingsMenu = document.querySelector("div.ytp-settings-menu");
-  brightness = parseInt(localStorage.getItem("lwchris.youtube_brightness_option.brightness") || "100", 10);
-  setBrightness(brightness);
-  addObserver();
+    const lang = document.documentElement.lang;
+    resources = LANGUAGE_RESOURCES[lang] || LANGUAGE_RESOURCES[LANGUAGE_DEFAULT];
+    video = document.querySelector("video");
+    settingsMenu = document.querySelector("div.ytp-settings-menu");
+    brightness = parseInt(localStorage.getItem("lwchris.youtube_brightness_option.brightness") || "100", 10);
+    setBrightness(brightness);
+    addObserver();
 
-  // Attach the event listeners to the video player element
-  const videoPlayer = document.getElementById("movie_player");
-  videoPlayer.addEventListener("keydown", handleKeydown);
-  videoPlayer.addEventListener("keyup", handleKeyup);
-}
+    // Attach the event listeners to the video player element
+    const videoPlayer = document.getElementById("movie_player");
+    videoPlayer.addEventListener("keydown", handleKeydown);
+    videoPlayer.addEventListener("keyup", handleKeyup);
+  }
 
   function addObserver() {
     const observer = new MutationObserver(menuPopulated);
@@ -349,47 +353,47 @@
     }
   }
 
-let hueIntervalId;
-let preventSeeking = false;
-let currentHue = 0;
+  let hueIntervalId;
+  let preventSeeking = false;
+  let currentHue = 0;
 
-function toggleHueColorCycling() {
-  const videoElem = document.querySelector("video");
-  if (videoElem) {
-    currentHue = (currentHue + 1) % 360;
-    videoElem.style.filter = `hue-rotate(${currentHue}deg)`;
-  }
-}
-
-function toggleHueColorCyclingReverse() {
-  const videoElem = document.querySelector("video");
-  if (videoElem) {
-    currentHue = (currentHue - 1 + 360) % 360;
-    videoElem.style.filter = `hue-rotate(${currentHue}deg)`;
-  }
-}
-
-function handleKeydown(event) {
-  if (event.ctrlKey && event.key === "ArrowUp") {
-    event.preventDefault(); // Prevent default scrolling behavior
-    toggleEqualizer();
-  } else if (event.ctrlKey && event.key === "ArrowDown") {
-    event.preventDefault(); // Prevent default scrolling behavior
-    toggleBlackAndWhite();
-  } else if (event.ctrlKey && event.key === ",") {
-    event.preventDefault(); // Prevent default seeking behavior
-    if (!preventSeeking) {
-      preventSeeking = true;
-      hueIntervalId = setInterval(toggleHueColorCycling, 5); // Faster color fading (every 5ms)
+  function toggleHueColorCycling() {
+    const videoElem = document.querySelector("video");
+    if (videoElem) {
+      currentHue = (currentHue + 1) % 360;
+      videoElem.style.filter = `hue-rotate(${currentHue}deg)`;
     }
-  } else if (event.ctrlKey && event.key === "ArrowRight") {
-    event.preventDefault(); // Prevent default seeking behavior
-    video.currentTime += 30; // Jump 30 seconds forward
   }
-}
+
+  function toggleHueColorCyclingReverse() {
+    const videoElem = document.querySelector("video");
+    if (videoElem) {
+      currentHue = (currentHue - 1 + 360) % 360;
+      videoElem.style.filter = `hue-rotate(${currentHue}deg)`;
+    }
+  }
+
+  function handleKeydown(event) {
+    if (event.ctrlKey && event.key === "ArrowUp") {
+      event.preventDefault(); // Prevent default scrolling behavior
+      toggleEqualizer();
+    } else if (event.ctrlKey && event.key === "ArrowDown") {
+      event.preventDefault(); // Prevent default scrolling behavior
+      toggleBlackAndWhite();
+    } else if (event.ctrlKey && event.key === ",") {
+      event.preventDefault(); // Prevent default seeking behavior
+      if (!preventSeeking) {
+        preventSeeking = true;
+        hueIntervalId = setInterval(toggleHueColorCycling, 5); // Faster color fading (every 5ms)
+      }
+    } else if (event.ctrlKey && event.key === "ArrowRight") {
+      event.preventDefault(); // Prevent default seeking behavior
+      video.currentTime += 30; // Jump 30 seconds forward
+    }
+  }
 
   function handleKeyup(event) {
-    if (event.ctrlKey && event.key === "ArrowLeft") {
+    if (event.ctrlKey && event.key === ",") {
       event.preventDefault(); // Prevent default seeking behavior
       preventSeeking = false;
       clearInterval(hueIntervalId);
