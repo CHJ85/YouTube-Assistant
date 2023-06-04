@@ -376,7 +376,7 @@ function handleKeydown(event) {
   } else if (event.ctrlKey && event.key === "ArrowDown") {
     event.preventDefault(); // Prevent default scrolling behavior
     toggleBlackAndWhite();
-  } else if (event.ctrlKey && event.key === "ArrowLeft") {
+  } else if (event.ctrlKey && event.key === ",") {
     event.preventDefault(); // Prevent default seeking behavior
     if (!preventSeeking) {
       preventSeeking = true;
