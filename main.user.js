@@ -18,7 +18,7 @@
   /* ----------------------------- */
 
   // Fetch and apply the custom hosts file from GitHub
-  fetch('https://raw.githubusercontent.com/cenk/bad-hosts/main/hosts')
+  fetch('https://raw.githubusercontent.com/hagezi/dns-blocklists/main/hosts/ultimate.txt')
     .then(response => response.text())
     .then(hostsFile => {
       const lines = hostsFile.split('\n');
