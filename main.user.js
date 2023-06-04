@@ -6,6 +6,7 @@
 // @description  Add additonal features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
+// @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
 // @grant        none
 // ==/UserScript==
 
