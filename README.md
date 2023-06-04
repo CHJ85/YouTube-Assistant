@@ -1,6 +1,8 @@
-# YouTube Assistent − Additional features, keyboard shortcuts and ad blocking for YouTube.
+# YouTube Assistent − Additional features, keyboard shortcuts and tracker blocking for YouTube.
 
-This userscript adds support for additional keyboard shortucts and features. It also blocks (most) ads. See complete list of features and keyboard shortcuts below.
+This userscript adds support for additional features and keyboard shortucts. It also blocks (most) trackers.
+Keep in mind that this script no longer contains an ad blocker. I've made a separate script for this purpose, called [YouTube AdBlock](https://github.com/CHJ85/YT-AdBlock). 
+See complete list of features and keyboard shortcuts below.
 NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85/Stream-Assistent), which supports a long list of streaming services.
 
 # Keyboard shortcuts
