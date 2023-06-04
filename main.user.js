@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         YouTube Assistant - Keyboard shortcuts and features
+// @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.2
-// @description  Add additonal features and ad blocking to improve your viewing experience on YouTube.
+// @version      1.3
+// @description  Add additonal features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
 // @grant        none
@@ -13,7 +13,7 @@
   'use strict';
 
   /* ----------------------------- */
-  /* Ad Blocking with Hosts File */
+  /* Tracker Blocking with Hosts File */
   /* ----------------------------- */
 
   // Fetch and apply the custom hosts file from GitHub
@@ -36,7 +36,7 @@
         });
       };
 
-      // Block ads when the page loads and whenever the DOM changes
+      // Block trackers when the page loads and whenever the DOM changes
       blockAds();
       const observer = new MutationObserver(blockAds);
       observer.observe(document.body, { childList: true, subtree: true });
