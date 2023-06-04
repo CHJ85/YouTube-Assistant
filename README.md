@@ -1,7 +1,6 @@
 # YouTube Assistent − Additional features, keyboard shortcuts and tracker blocking for YouTube.
 
 This userscript adds support for additional features and keyboard shortucts. It also blocks (most) trackers.
-Keep in mind that this script no longer contains an ad blocker. I've made a separate script for this purpose, called [YouTube AdBlock](https://github.com/CHJ85/YT-AdBlock). 
 See complete list of features and keyboard shortcuts below.
 NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85/Stream-Assistent), which supports a long list of streaming services.
 
@@ -15,8 +14,7 @@ NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85
  - Control brightness from the video player's setting menu
  - Additional speed options have been added under "Playback speed"
 # Ad blocking
-This script does not garantee a fully ad-free experience.
-However... if an ad is not blocked, this script does make it easy for you to fast forward.
+This script no longer contains an ad blocker. I've made a separate script for this purpose, called [YouTube AdBlock](https://github.com/CHJ85/YT-AdBlock). 
 # Installation
 To use the script:
  - Install a userscript manager extension like [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/).
