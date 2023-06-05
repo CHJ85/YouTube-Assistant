@@ -2,53 +2,18 @@
 // @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.4
-// @description  Add additonal features and keyboard shortcuts to improve your viewing experience on YouTube.
+// @version      1.5
+// @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
 // @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
-// @grant        none
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
 // ==/UserScript==
 
 (function() {
   'use strict';
 
-  /* ----------------------------- */
-  /* Tracker Blocking with Hosts File */
-  /* ----------------------------- */
-
-  // Fetch and apply the custom hosts file from GitHub
-  fetch('https://raw.githubusercontent.com/hagezi/dns-blocklists/main/hosts/ultimate.txt')
-    .then(response => response.text())
-    .then(hostsFile => {
-      const lines = hostsFile.split('\n');
-      const adsRegex = /^0\.0\.0\.0\s+(.+)/;
-      const adDomains = lines
-        .filter(line => adsRegex.test(line))
-        .map(line => line.match(adsRegex)[1].trim());
-
-      const blockAds = () => {
-        const adLinks = document.querySelectorAll('a[href*="doubleclick.net"]');
-        adLinks.forEach(adLink => {
-          const adURL = new URL(adLink.href);
-          if (adDomains.includes(adURL.hostname)) {
-            adLink.remove();
-          }
-        });
-        const overlayAds = document.querySelectorAll('.ytp-ad-overlay-slot');
-        overlayAds.forEach(overlayAd => overlayAd.remove());
-        const videoAds = document.querySelectorAll('.ytp-ad-image-overlay');
-        videoAds.forEach(videoAd => videoAd.remove());
-      };
-
-      // Block trackers when the page loads and whenever the DOM changes
-      blockAds();
-      const observer = new MutationObserver(blockAds);
-      observer.observe(document.body, { childList: true, subtree: true });
-    })
-    .catch(error => {
-      console.error('Failed to fetch the hosts file:', error);
-    });
+  // Your code here
 
   /* ----------------------------- */
   /* Aspect Ratio Control */
@@ -374,26 +339,30 @@
   }
 
   function handleKeydown(event) {
-    if (event.ctrlKey && event.key === "ArrowUp") {
+    if ((event.ctrlKey || event.metaKey) && event.key === "ArrowUp") {
       event.preventDefault(); // Prevent default scrolling behavior
       toggleEqualizer();
-    } else if (event.ctrlKey && event.key === "ArrowDown") {
+    } else if ((event.ctrlKey || event.metaKey) && event.key === "ArrowDown") {
       event.preventDefault(); // Prevent default scrolling behavior
       toggleBlackAndWhite();
-    } else if (event.ctrlKey && event.key === ",") {
+    } else if ((event.ctrlKey || event.metaKey) && event.key === ",") {
       event.preventDefault(); // Prevent default seeking behavior
       if (!preventSeeking) {
         preventSeeking = true;
         hueIntervalId = setInterval(toggleHueColorCycling, 5); // Faster color fading (every 5ms)
       }
-    } else if (event.ctrlKey && event.key === "ArrowRight") {
+    } else if ((event.ctrlKey || event.metaKey) && event.key === "ArrowRight") {
       event.preventDefault(); // Prevent default seeking behavior
       video.currentTime += 30; // Jump 30 seconds forward
     }
   }
 
+  // Add autofocus attribute to the video element
+  const videoElement = document.querySelector("video");
+  videoElement.setAttribute("autofocus", "true");
+
   function handleKeyup(event) {
-    if (event.ctrlKey && event.key === ",") {
+    if ((event.ctrlKey || event.metaKey) && event.key === ",") {
       event.preventDefault(); // Prevent default seeking behavior
       preventSeeking = false;
       clearInterval(hueIntervalId);
@@ -402,4 +371,163 @@
 
   document.addEventListener("keydown", handleKeydown);
   document.addEventListener("keyup", handleKeyup);
+
 })();
+
+// Create the toggle button
+const toggleButton = document.createElement('button');
+toggleButton.id = 'adBlockToggle';
+toggleButton.textContent = 'Block Ads';
+toggleButton.style.position = 'fixed';
+toggleButton.style.top = '0';
+toggleButton.style.left = '0';
+toggleButton.style.zIndex = '9999';
+toggleButton.style.padding = '10px';
+toggleButton.style.background = '#ff0000';
+toggleButton.style.color = '#ffffff';
+
+// Add event listener to toggle the ad blocking functionality
+toggleButton.addEventListener('click', toggleAdBlock);
+
+// Add the toggle button to the page
+document.body.appendChild(toggleButton);
+
+// Retrieve the ad blocking state from localStorage or set it to true by default
+let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
+
+// Update the toggle button text based on the ad blocking state
+updateToggleButton();
+
+// Toggle the ad blocking functionality
+function toggleAdBlock() {
+  adBlockEnabled = !adBlockEnabled;
+  localStorage.setItem('adBlockEnabled', adBlockEnabled.toString());
+  updateToggleButton();
+  if (adBlockEnabled) {
+    blockAds();
+  } else {
+    unblockAds();
+  }
+}
+
+// Update the toggle button text based on the ad blocking state
+function updateToggleButton() {
+  toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
+  toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Create the toggle button
+  const toggleButton = document.createElement('button');
+  toggleButton.id = 'adBlockToggle';
+  toggleButton.textContent = 'Block Ads';
+  toggleButton.style.position = 'fixed';
+  toggleButton.style.top = '0';
+  toggleButton.style.left = '0';
+  toggleButton.style.zIndex = '9999';
+  toggleButton.style.padding = '10px';
+  toggleButton.style.background = '#ff0000';
+  toggleButton.style.color = '#ffffff';
+
+  // Add event listener to toggle the ad blocking functionality
+  toggleButton.addEventListener('click', toggleAdBlock);
+
+  // Add the toggle button to the page
+  document.body.appendChild(toggleButton);
+
+  // Retrieve the ad blocking state from localStorage or set it to true by default
+  let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
+
+  // Update the toggle button text based on the ad blocking state
+  updateToggleButton();
+
+  // Toggle the ad blocking functionality
+  function toggleAdBlock() {
+    adBlockEnabled = !adBlockEnabled;
+    localStorage.setItem('adBlockEnabled', adBlockEnabled.toString());
+    updateToggleButton();
+    if (adBlockEnabled) {
+      blockAds();
+    } else {
+      unblockAds();
+    }
+  }
+
+  // Update the toggle button text based on the ad blocking state
+  function updateToggleButton() {
+    toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
+    toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
+  }
+
+  // Block ads
+  function blockAds() {
+    const adDomains = [
+      'googlesyndication.com',
+      'doubleclick.net',
+      'ad.googlevideo.com',
+      'googleadservices.com',
+      'redirector.googlevideo.com',
+      'googlehosted.l.googleusercontent.com'
+    ];
+
+    adDomains.forEach(domain => {
+      const adLinks = document.querySelectorAll(`a[href*="${domain}"]`);
+      adLinks.forEach(adLink => adLink.remove());
+      const adElements = document.querySelectorAll(`[src*="${domain}"], [href*="${domain}"]`);
+      adElements.forEach(adElement => {
+        const parent = adElement.closest('.ytd-player');
+        if (parent) {
+          parent.remove();
+        } else {
+          adElement.remove();
+        }
+      });
+    });
+
+    // Fetch and block additional hosts
+    const hosts = [
+      'https://raw.githubusercontent.com/taichikuji/youtube-ads-4-adaway/master/hosts',
+      'https://raw.githubusercontent.com/nguyenphuong-info/YoutubeAds/main/ads.txt'
+    ];
+
+    hosts.forEach(host => {
+      fetch(host)
+        .then(response => response.text())
+        .then(text => {
+          const lines = text.split('\n');
+          lines.forEach(line => {
+            if (line.trim().startsWith('127.0.0.1')) {
+              const hostname = line.trim().split(' ')[1];
+              blockHostname(hostname);
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Failed to fetch and block additional hosts:', error);
+        });
+    });
+  }
+
+  // Block a specific hostname
+  function blockHostname(hostname) {
+    const adElements = document.querySelectorAll(`[src*="${hostname}"], [href*="${hostname}"]`);
+    adElements.forEach(adElement => {
+      const parent = adElement.closest('.ytd-player');
+      if (parent) {
+        parent.remove();
+      } else {
+        adElement.remove();
+      }
+    });
+  }
+
+  // Unblock ads
+  function unblockAds() {
+    // You can add code here to restore any ads that were previously blocked
+  }
+
+  // Initialize the ad blocking state
+  if (adBlockEnabled) {
+    blockAds();
+  }
+});
