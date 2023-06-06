@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name         YouTube Assistant - Additional features, ad block and keyboard shortcuts
+// @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.6
-// @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
+// @version      1.7
+// @description  Add additional features, ad block and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
+// @run-at       document-end
 // @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
 // ==/UserScript==
 
@@ -52,19 +53,19 @@
     </style>
   `;
 
-  const anchorElem = document.querySelector(".ytp-button.ytp-settings-button, .ytp-subtitles-button.ytp-button");
+  const anchorElem = document.documentElement.querySelector(".ytp-button.ytp-settings-button, .ytp-subtitles-button.ytp-button");
   anchorElem.insertAdjacentHTML("beforebegin", buttonhtml + csshtml);
 
   const buttonElem = document.querySelector("#aspectratioSwitcher");
   buttonElem.addEventListener("click", aspectRatioSwitch);
 
   function aspectRatioSwitch() {
-    const videoElem = document.querySelector("#movie_player");
+    const videoElem = document.getElementById("movie_player");
 
     aspectRatiosIndex = (aspectRatiosIndex + 1) % aspectRatios.length;
     currentRatio = aspectRatios[aspectRatiosIndex];
     videoElem.setAttribute(videoElemAttr, currentRatio);
-    buttonElem.innerHTML = currentRatio;
+    buttonElem.textContent = currentRatio;
   }
 
   /* ---------------------------- */
@@ -275,12 +276,6 @@
     merger.connect(context.destination);
   }
 
-  function resetAudioContext() {
-    const audioContext = video.mozAudioContext || video.webkitAudioContext || new AudioContext();
-    const source = audioContext.createMediaElementSource(video);
-    source.disconnect();
-  }
-
   function toggleEqualizer() {
     if (equalizerEnabled) {
       resetAudioContext();
@@ -327,14 +322,6 @@
     }
   }
 
-  function toggleHueColorCyclingReverse() {
-    const videoElem = document.querySelector("video");
-    if (videoElem) {
-      currentHue = (currentHue - 1 + 360) % 360;
-      videoElem.style.filter = `hue-rotate(${currentHue}deg)`;
-    }
-  }
-
   function handleKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "ArrowUp") {
       event.preventDefault(); // Prevent default scrolling behavior
@@ -374,6 +361,40 @@
 // Retrieve the ad blocking state from localStorage or set it to true by default
 let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
 
+// Function to block ads based on ad domains
+function blockAds() {
+  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
+  adElements.forEach((adElement) => {
+    adElement.style.display = 'none';
+  });
+}
+
+// Function to unblock ads
+function unblockAds() {
+  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
+  adElements.forEach((adElement) => {
+    adElement.style.display = 'block';
+  });
+}
+
+// Function to toggle the ad blocking functionality
+function toggleAdBlock() {
+  adBlockEnabled = !adBlockEnabled;
+  localStorage.setItem('adBlockEnabled', adBlockEnabled.toString());
+  updateToggleButton();
+  if (adBlockEnabled) {
+    blockAds();
+  } else {
+    unblockAds();
+  }
+}
+
+// Function to update the toggle button text based on the ad blocking state
+function updateToggleButton() {
+  toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
+  toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
+}
+
 // List of ad domains to block
 const adDomains = [
   'googlesyndication.com',
@@ -391,68 +412,39 @@ const adDomains = [
   'ad.googlevideo.com',
   'googleadservices.com',
   'redirector.googlevideo.com',
-  'googlehosted.l.googleusercontent.com'
+  'googlehosted.l.googleusercontent.com',
+  'fwmrm.net',
+  '2mdn.net',
+  'ad.youtube.com',
+  'ads.youtube.com',
+  'adservice.google.com',
+  'analytic-google.com',
+  'eligibility-panelresearch.googlevideo.com',
+  'adform.net',
+  'googleadapis.l.google.com',
+  'innovid.com'
 ];
-
-// Block ads based on ad domains
-function blockAds() {
-  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
-  adElements.forEach((adElement) => {
-    adElement.style.display = 'none';
-  });
-}
-
-// Unblock ads
-function unblockAds() {
-  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
-  adElements.forEach((adElement) => {
-    adElement.style.display = 'block';
-  });
-}
-
-// Toggle the ad blocking functionality
-function toggleAdBlock() {
-  adBlockEnabled = !adBlockEnabled;
-  localStorage.setItem('adBlockEnabled', adBlockEnabled.toString());
-  updateToggleButton();
-  if (adBlockEnabled) {
-    blockAds();
-  } else {
-    unblockAds();
-  }
-}
-
-// Update the toggle button text based on the ad blocking state
-function updateToggleButton() {
-  toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
-  toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
-}
-
-// Remove the existing button
-const existingButton = document.getElementById('adBlockToggle');
-if (existingButton) {
-  existingButton.remove();
-}
 
 // Create the toggle button
 const toggleButton = document.createElement('button');
 toggleButton.id = 'adBlockToggle';
-toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
 toggleButton.style.position = 'fixed';
-toggleButton.style.top = '0';
-toggleButton.style.left = '0';
+toggleButton.style.top = '50px';
+toggleButton.style.right = '10px';
 toggleButton.style.zIndex = '9999';
 toggleButton.style.padding = '10px';
-toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
+toggleButton.style.fontWeight = 'bold';
 toggleButton.style.color = '#ffffff';
-
-// Add event listener to toggle the ad blocking functionality
+toggleButton.style.cursor = 'pointer';
 toggleButton.addEventListener('click', toggleAdBlock);
+updateToggleButton();
 
-// Add the toggle button to the page
+// Append the toggle button to the document body
 document.body.appendChild(toggleButton);
 
-// Initialize the ad blocking state
+// Block or unblock ads based on the initial state
 if (adBlockEnabled) {
   blockAds();
+} else {
+  unblockAds();
 }
