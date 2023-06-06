@@ -2,8 +2,8 @@
 // @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.7
-// @description  Add additional features, ad block and keyboard shortcuts to improve your viewing experience on YouTube.
+// @version      1.8
+// @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
 // @run-at       document-end
@@ -441,6 +441,18 @@ updateToggleButton();
 
 // Append the toggle button to the document body
 document.body.appendChild(toggleButton);
+
+// Function to handle the fullscreen change event
+function handleFullscreenChange() {
+  if (document.fullscreenElement) {
+    toggleButton.style.display = 'none'; // Hide the toggle button in full-screen mode
+  } else {
+    toggleButton.style.display = 'block'; // Show the toggle button when exiting full-screen mode
+  }
+}
+
+// Listen for the fullscreen change event
+document.addEventListener('fullscreenchange', handleFullscreenChange);
 
 // Block or unblock ads based on the initial state
 if (adBlockEnabled) {
