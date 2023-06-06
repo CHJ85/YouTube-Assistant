@@ -1,19 +1,16 @@
 // ==UserScript==
-// @name         YouTube Assistant - Additional features and keyboard shortcuts
+// @name         YouTube Assistant - Additional features, ad block and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.5
+// @version      1.6
 // @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
 // @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
-// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
 // ==/UserScript==
 
 (function() {
   'use strict';
-
-  // Your code here
 
   /* ----------------------------- */
   /* Aspect Ratio Control */
@@ -374,29 +371,44 @@
 
 })();
 
-// Create the toggle button
-const toggleButton = document.createElement('button');
-toggleButton.id = 'adBlockToggle';
-toggleButton.textContent = 'Block Ads';
-toggleButton.style.position = 'fixed';
-toggleButton.style.top = '0';
-toggleButton.style.left = '0';
-toggleButton.style.zIndex = '9999';
-toggleButton.style.padding = '10px';
-toggleButton.style.background = '#ff0000';
-toggleButton.style.color = '#ffffff';
-
-// Add event listener to toggle the ad blocking functionality
-toggleButton.addEventListener('click', toggleAdBlock);
-
-// Add the toggle button to the page
-document.body.appendChild(toggleButton);
-
 // Retrieve the ad blocking state from localStorage or set it to true by default
 let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
 
-// Update the toggle button text based on the ad blocking state
-updateToggleButton();
+// List of ad domains to block
+const adDomains = [
+  'googlesyndication.com',
+  'doubleclick.net',
+  'doubleclick.com',
+  'adserver.com',
+  'adnetwork.net',
+  'advertiser.org',
+  'google-analytics.com',
+  'omniture.com',
+  'intellitxt.com',
+  'quantserve.com',
+  '2o7.net',
+  '207.net',
+  'ad.googlevideo.com',
+  'googleadservices.com',
+  'redirector.googlevideo.com',
+  'googlehosted.l.googleusercontent.com'
+];
+
+// Block ads based on ad domains
+function blockAds() {
+  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
+  adElements.forEach((adElement) => {
+    adElement.style.display = 'none';
+  });
+}
+
+// Unblock ads
+function unblockAds() {
+  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
+  adElements.forEach((adElement) => {
+    adElement.style.display = 'block';
+  });
+}
 
 // Toggle the ad blocking functionality
 function toggleAdBlock() {
@@ -416,118 +428,31 @@ function updateToggleButton() {
   toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  // Create the toggle button
-  const toggleButton = document.createElement('button');
-  toggleButton.id = 'adBlockToggle';
-  toggleButton.textContent = 'Block Ads';
-  toggleButton.style.position = 'fixed';
-  toggleButton.style.top = '0';
-  toggleButton.style.left = '0';
-  toggleButton.style.zIndex = '9999';
-  toggleButton.style.padding = '10px';
-  toggleButton.style.background = '#ff0000';
-  toggleButton.style.color = '#ffffff';
+// Remove the existing button
+const existingButton = document.getElementById('adBlockToggle');
+if (existingButton) {
+  existingButton.remove();
+}
 
-  // Add event listener to toggle the ad blocking functionality
-  toggleButton.addEventListener('click', toggleAdBlock);
+// Create the toggle button
+const toggleButton = document.createElement('button');
+toggleButton.id = 'adBlockToggle';
+toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
+toggleButton.style.position = 'fixed';
+toggleButton.style.top = '0';
+toggleButton.style.left = '0';
+toggleButton.style.zIndex = '9999';
+toggleButton.style.padding = '10px';
+toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
+toggleButton.style.color = '#ffffff';
 
-  // Add the toggle button to the page
-  document.body.appendChild(toggleButton);
+// Add event listener to toggle the ad blocking functionality
+toggleButton.addEventListener('click', toggleAdBlock);
 
-  // Retrieve the ad blocking state from localStorage or set it to true by default
-  let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
+// Add the toggle button to the page
+document.body.appendChild(toggleButton);
 
-  // Update the toggle button text based on the ad blocking state
-  updateToggleButton();
-
-  // Toggle the ad blocking functionality
-  function toggleAdBlock() {
-    adBlockEnabled = !adBlockEnabled;
-    localStorage.setItem('adBlockEnabled', adBlockEnabled.toString());
-    updateToggleButton();
-    if (adBlockEnabled) {
-      blockAds();
-    } else {
-      unblockAds();
-    }
-  }
-
-  // Update the toggle button text based on the ad blocking state
-  function updateToggleButton() {
-    toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
-    toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
-  }
-
-  // Block ads
-  function blockAds() {
-    const adDomains = [
-      'googlesyndication.com',
-      'doubleclick.net',
-      'ad.googlevideo.com',
-      'googleadservices.com',
-      'redirector.googlevideo.com',
-      'googlehosted.l.googleusercontent.com'
-    ];
-
-    adDomains.forEach(domain => {
-      const adLinks = document.querySelectorAll(`a[href*="${domain}"]`);
-      adLinks.forEach(adLink => adLink.remove());
-      const adElements = document.querySelectorAll(`[src*="${domain}"], [href*="${domain}"]`);
-      adElements.forEach(adElement => {
-        const parent = adElement.closest('.ytd-player');
-        if (parent) {
-          parent.remove();
-        } else {
-          adElement.remove();
-        }
-      });
-    });
-
-    // Fetch and block additional hosts
-    const hosts = [
-      'https://raw.githubusercontent.com/taichikuji/youtube-ads-4-adaway/master/hosts',
-      'https://raw.githubusercontent.com/nguyenphuong-info/YoutubeAds/main/ads.txt'
-    ];
-
-    hosts.forEach(host => {
-      fetch(host)
-        .then(response => response.text())
-        .then(text => {
-          const lines = text.split('\n');
-          lines.forEach(line => {
-            if (line.trim().startsWith('127.0.0.1')) {
-              const hostname = line.trim().split(' ')[1];
-              blockHostname(hostname);
-            }
-          });
-        })
-        .catch(error => {
-          console.error('Failed to fetch and block additional hosts:', error);
-        });
-    });
-  }
-
-  // Block a specific hostname
-  function blockHostname(hostname) {
-    const adElements = document.querySelectorAll(`[src*="${hostname}"], [href*="${hostname}"]`);
-    adElements.forEach(adElement => {
-      const parent = adElement.closest('.ytd-player');
-      if (parent) {
-        parent.remove();
-      } else {
-        adElement.remove();
-      }
-    });
-  }
-
-  // Unblock ads
-  function unblockAds() {
-    // You can add code here to restore any ads that were previously blocked
-  }
-
-  // Initialize the ad blocking state
-  if (adBlockEnabled) {
-    blockAds();
-  }
-});
+// Initialize the ad blocking state
+if (adBlockEnabled) {
+  blockAds();
+}
