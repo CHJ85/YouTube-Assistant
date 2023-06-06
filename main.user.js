@@ -2,7 +2,7 @@
 // @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.8
+// @version      1.9
 // @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        *://*.youtube.com/*
 // @license      MIT
@@ -10,6 +10,7 @@
 // @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
 // ==/UserScript==
 
+setTimeout(function() {
 (function() {
   'use strict';
 
@@ -363,7 +364,7 @@ let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localSto
 
 // Function to block ads based on ad domains
 function blockAds() {
-  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
+  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"], a[href^="//"].href, a[href^="http://"].href, a[href^="https://"].href');
   adElements.forEach((adElement) => {
     adElement.style.display = 'none';
   });
@@ -371,7 +372,7 @@ function blockAds() {
 
 // Function to unblock ads
 function unblockAds() {
-  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"]');
+  const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"], a[href^="//"].href, a[href^="http://"].href, a[href^="https://"].href');
   adElements.forEach((adElement) => {
     adElement.style.display = 'block';
   });
@@ -420,43 +421,54 @@ const adDomains = [
   'adservice.google.com',
   'analytic-google.com',
   'eligibility-panelresearch.googlevideo.com',
-  'adform.net',
-  'googleadapis.l.google.com',
-  'innovid.com'
+  'youtubeeducation.com',
+  'youtubekids.com',
+  'youtube-nocookie.com',
+  'yt3.ggpht.com',
+  'ytimg.com',
+  'ggpht.com',
+  'youtube.com/annotations_invideo',
+  's0.2mdn.net',
+  's1.2mdn.net',
+  'google.com/pagead',
+  'video-ad-stats.googlesyndication.com',
+  'pubads.g.doubleclick.net',
+  'ad.doubleclick.net',
+  'securepubads.g.doubleclick.net',
+  'cdn.doubleverify.com',
+  'cdn.adyapper.com',
+  'z.moatads.com',
+  's3.vidible.tv',
+  'metrics.ooyala.com',
+  'delivery.swid.switchads.com',
+  'ads2.contentabc.com',
+  'gelbooru.com'
 ];
 
-// Create the toggle button
+// Create a toggle button element
 const toggleButton = document.createElement('button');
-toggleButton.id = 'adBlockToggle';
+toggleButton.textContent = adBlockEnabled ? 'Block Ads' : 'Show Ads';
 toggleButton.style.position = 'fixed';
-toggleButton.style.top = '50px';
+toggleButton.style.bottom = '10px';
 toggleButton.style.right = '10px';
 toggleButton.style.zIndex = '9999';
-toggleButton.style.padding = '10px';
+toggleButton.style.padding = '8px 12px';
+toggleButton.style.fontSize = '14px';
 toggleButton.style.fontWeight = 'bold';
 toggleButton.style.color = '#ffffff';
+toggleButton.style.border = 'none';
+toggleButton.style.borderRadius = '4px';
 toggleButton.style.cursor = 'pointer';
+toggleButton.style.background = adBlockEnabled ? '#ff0000' : '#cccccc';
 toggleButton.addEventListener('click', toggleAdBlock);
-updateToggleButton();
 
 // Append the toggle button to the document body
 document.body.appendChild(toggleButton);
 
-// Function to handle the fullscreen change event
-function handleFullscreenChange() {
-  if (document.fullscreenElement) {
-    toggleButton.style.display = 'none'; // Hide the toggle button in full-screen mode
-  } else {
-    toggleButton.style.display = 'block'; // Show the toggle button when exiting full-screen mode
-  }
-}
-
-// Listen for the fullscreen change event
-document.addEventListener('fullscreenchange', handleFullscreenChange);
-
-// Block or unblock ads based on the initial state
+// Block or unblock ads based on the initial ad blocking state
 if (adBlockEnabled) {
   blockAds();
 } else {
   unblockAds();
 }
+}, 2000); // Adjust the delay as needed (in milliseconds)
