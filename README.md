@@ -1,6 +1,6 @@
 # YouTube Assistent − Additional features, Ad Blocker and keyboard shortcuts for YouTube.
 
-This userscript adds support for additional features and keyboard shortucts. It also blocks (most) ads and trackers.
+This userscript adds support for additional features, ad block and keyboard shortucts. Enabling the Ad Block will allow you to block (most) ads and trackers.
 See complete list of features and keyboard shortcuts below.
 NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85/Stream-Assistent), which supports a long list of streaming services.
 
@@ -15,11 +15,11 @@ NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85
  - Control brightness from the video player's setting menu
  - Additional speed options have been added under "Playback speed"
 # Ad blocking
-This script uses a blacklist of ad domains in order to block ads. So it is important that you turn off the ad blocker and allow ads in every once in awhile for caching.
-And the script will block 95% of all video ads and trackers when the "ad" button is set to "Block Ads". 
+Toggeling the "ads" button on/off allows you to have a pleasent ad-free experience on YouTube, while at the same time support your favorite YouTuber.
+And the script will block 97% of all video ads.
 # Installation
 To use the script:
  - Install a userscript manager extension like [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/).
  - Install the [script](https://github.com/chj85/YouTube-Assistent/raw/main/main.user.js)
-# Support
+# Support / bug report
 Are you having technical issues or feature requests, feel free to open up a new Issue.
