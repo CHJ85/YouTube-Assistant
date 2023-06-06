@@ -15,7 +15,8 @@ NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85
  - Control brightness from the video player's setting menu
  - Additional speed options have been added under "Playback speed"
 # Ad blocking
-This script will block 95% of all video ads and trackers when the "ad" button is set to "Block Ads". 
+This script uses a blacklist of ad domains in order to block ads. So it is important that you turn off the ad blocker and allow ads in every once in awhile for caching.
+And the script will block 95% of all video ads and trackers when the "ad" button is set to "Block Ads". 
 # Installation
 To use the script:
  - Install a userscript manager extension like [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/).
