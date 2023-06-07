@@ -2,11 +2,11 @@
 // @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      1.9
+// @version      2.0
 // @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
-// @match        *://*.youtube.com/*
+// @match        https://www.youtube.com/*
 // @license      MIT
-// @run-at       document-end
+// @run-at       document-idle
 // @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
 // ==/UserScript==
 
@@ -289,6 +289,17 @@ setTimeout(function() {
     }
   }
 
+    /* --------------- */
+    /* Skip Ads Button */
+    /* --------------- */
+
+    function clickSkipAdsButton() {
+      const skipButton = document.querySelector('.ytp-ad-skip-button');
+      if (skipButton) {
+        skipButton.click();
+      }
+    }
+
   /* ---------------------- */
   /* Black and White Toggle */
   /* ---------------------- */
@@ -311,6 +322,11 @@ setTimeout(function() {
     }
   }
 
+  /* ------------------ */
+  /* Hue Colors Control */
+  /* ------------------ */
+
+
   let hueIntervalId;
   let preventSeeking = false;
   let currentHue = 0;
@@ -323,6 +339,17 @@ setTimeout(function() {
     }
   }
 
+    function handleFullscreenChange() {
+      const videoPlayer = document.getElementById("movie_player");
+      if (document.fullscreenElement && videoPlayer) {
+        videoPlayer.style.zIndex = '9999999';
+      } else if (!document.fullscreenElement && videoPlayer) {
+        videoPlayer.style.zIndex = '';
+      }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
   function handleKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "ArrowUp") {
       event.preventDefault(); // Prevent default scrolling behavior
@@ -330,6 +357,9 @@ setTimeout(function() {
     } else if ((event.ctrlKey || event.metaKey) && event.key === "ArrowDown") {
       event.preventDefault(); // Prevent default scrolling behavior
       toggleBlackAndWhite();
+    } else if ((event.ctrlKey || event.metaKey) && event.key === "ArrowLeft") {
+      event.preventDefault(); // Prevent default scrolling behavior
+      clickSkipAdsButton();
     } else if ((event.ctrlKey || event.metaKey) && event.key === ",") {
       event.preventDefault(); // Prevent default seeking behavior
       if (!preventSeeking) {
@@ -362,7 +392,7 @@ setTimeout(function() {
 // Retrieve the ad blocking state from localStorage or set it to true by default
 let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
 
-// Function to block ads based on ad domains
+// Function to block ads based on ad domains (including subdomains)
 function blockAds() {
   const adElements = document.querySelectorAll('a[href*="' + adDomains.join('"], a[href*="') + '"], a[href^="//"].href, a[href^="http://"].href, a[href^="https://"].href');
   adElements.forEach((adElement) => {
@@ -398,51 +428,48 @@ function updateToggleButton() {
 
 // List of ad domains to block
 const adDomains = [
-  'googlesyndication.com',
-  'doubleclick.net',
-  'doubleclick.com',
-  'adserver.com',
-  'adnetwork.net',
-  'advertiser.org',
-  'google-analytics.com',
-  'omniture.com',
-  'intellitxt.com',
-  'quantserve.com',
-  '2o7.net',
-  '207.net',
-  'ad.googlevideo.com',
-  'googleadservices.com',
-  'redirector.googlevideo.com',
-  'googlehosted.l.googleusercontent.com',
-  'fwmrm.net',
   '2mdn.net',
-  'ad.youtube.com',
+  '207.net',
+  '2o7.net',
+  'ad.server.com',
+  'ad.network.net',
+  'advertiser.org',
   'ads.youtube.com',
   'adservice.google.com',
   'analytic-google.com',
+  'adyapper.com',
+  'doubleclick.com',
+  'doubleclick.net',
+  'doubleverify.com',
   'eligibility-panelresearch.googlevideo.com',
+  'fwmrm.net',
+  'gelbooru.com',
+  'ggpht.com',
+  'google-analytics.com',
+  'googleadservices.com',
+  'google.com/pagead',
+  'googleusercontent.com',
+  'googlesyndication.com',
+  'googletagservices.com',
+  'googlevideo.com',
+  'innovid.com',
+  'intellitxt.com',
+  'l.google.com',
+  'ooyala.com',
+  'omniture.com',
+  'quantserve.com',
+  'securepubads.g.doubleclick.net',
+  'serving-sys.com',
+  'switchads.com',
+  'tubemogul.com',
+  'video-ad-stats.googlesyndication.com',
+  'vidible.tv',
+  'youtube.com/annotations_invideo',
   'youtubeeducation.com',
   'youtubekids.com',
   'youtube-nocookie.com',
-  'yt3.ggpht.com',
-  'ytimg.com',
   'ggpht.com',
-  'youtube.com/annotations_invideo',
-  's0.2mdn.net',
-  's1.2mdn.net',
-  'google.com/pagead',
-  'video-ad-stats.googlesyndication.com',
-  'pubads.g.doubleclick.net',
-  'ad.doubleclick.net',
-  'securepubads.g.doubleclick.net',
-  'cdn.doubleverify.com',
-  'cdn.adyapper.com',
-  'z.moatads.com',
-  's3.vidible.tv',
-  'metrics.ooyala.com',
-  'delivery.swid.switchads.com',
-  'ads2.contentabc.com',
-  'gelbooru.com'
+  'ytimg.com'
 ];
 
 // Create a toggle button element
@@ -471,4 +498,4 @@ if (adBlockEnabled) {
 } else {
   unblockAds();
 }
-}, 2000); // Adjust the delay as needed (in milliseconds)
+}, 3500); // Adjust the delay as needed (in milliseconds)
