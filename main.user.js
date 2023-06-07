@@ -2,11 +2,11 @@
 // @name         YouTube Assistant - Additional features and keyboard shortcuts
 // @namespace    https://github.com/chj85/YouTube-Assistant
 // @author       CHJ85
-// @version      2.0
+// @version      2.0.1
 // @description  Add additional features and keyboard shortcuts to improve your viewing experience on YouTube.
 // @match        https://www.youtube.com/*
 // @license      MIT
-// @run-at       document-idle
+// @run-at       document-start
 // @icon         https://img.uxwing.com/wp-content/themes/uxwing/download/brands-social-media/youtube-app-icon.svg
 // ==/UserScript==
 
@@ -339,6 +339,10 @@ setTimeout(function() {
     }
   }
 
+  /* ------------------- */
+  /* Handling Fullscreen */
+  /* ------------------- */
+
     function handleFullscreenChange() {
       const videoPlayer = document.getElementById("movie_player");
       if (document.fullscreenElement && videoPlayer) {
@@ -388,6 +392,11 @@ setTimeout(function() {
   document.addEventListener("keyup", handleKeyup);
 
 })();
+
+  /* ----------- */
+  /* Ad Blocking */
+  /* ------------*/
+
 
 // Retrieve the ad blocking state from localStorage or set it to true by default
 let adBlockEnabled = localStorage.getItem('adBlockEnabled') === null || localStorage.getItem('adBlockEnabled') === 'true';
