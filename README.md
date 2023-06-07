@@ -7,6 +7,7 @@ NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85
 # Keyboard shortcuts
  - Ctrl+Up - Enable surround sound (unable to turn off without having to refresh the webpage)
  - Ctrl+Right - Jump forward 30 seconds. Useful for skipping the TV show intro or if you just want to fast forward a bit (works on ads too).
+ - Ctrl+Left - Skip Ads.
  - Ctrl+Down - Video filters: black & white, sepia and invert colors
  - Ctrl+, - Hue color control
 # Additional Features
@@ -16,7 +17,7 @@ NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85
  - Additional speed options have been added under "Playback speed"
 # Ad blocking
 Toggeling the "ads" button on/off allows you to have a pleasent ad-free experience on YouTube, while at the same time support your favorite YouTuber.
-And the script will block 97% of all video ads.
+The script will block most ads. However, you may click Ctrl+left to easily skip the ads, or Ctrl+right to skip 30 seconds if there is no "Skip Ads" button.
 # Installation
 To use the script:
  - Install a userscript manager extension like [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/).
