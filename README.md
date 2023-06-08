@@ -2,7 +2,7 @@
 
 This userscript adds support for additional features, ad block and keyboard shortucts. Enabling the Ad Block will allow you to block (most) ads and trackers.
 See complete list of features and keyboard shortcuts below.
-NOTE: YouTube Assistent derived from [Stream Assistent](https://github.com/CHJ85/Stream-Assistant), which supports a long list of streaming services.
+NOTE: YouTube Assistant derived from [Stream Assistant](https://github.com/CHJ85/Stream-Assistant), which supports a long list of streaming services.
 
 # Keyboard shortcuts
  - Ctrl+Up - Enable surround sound (unable to turn off without having to refresh the webpage)
