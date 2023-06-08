@@ -1,4 +1,4 @@
-# YouTube Assistent − Additional features, Ad Blocker and keyboard shortcuts for YouTube.
+# YouTube Assistant − Additional features, Ad Blocker and keyboard shortcuts for YouTube.
 
 This userscript adds support for additional features, ad block and keyboard shortucts. Enabling the Ad Block will allow you to block (most) ads and trackers.
 See complete list of features and keyboard shortcuts below.
